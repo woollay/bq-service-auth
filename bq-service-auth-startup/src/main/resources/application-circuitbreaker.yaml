@@ -1,0 +1,48 @@
+#spring-cloud内置熔断组件,也支持从springboot中集成
+resilience4j.circuitbreaker:
+  configs:
+    #熔断机制的默认设置
+    default:
+      #状态收集器类型
+      #COUNT_BASED：根据数量计算，slidingWindowSize为次数
+      #TIME_BASED：根据时间计算，slidingWindowSize为秒数
+      slidingWindowType: TIME_BASED
+      #时间窗口的大小为60秒
+      slidingWindowSize: 600
+      #在单位时间窗口内最少需要多少次调用才能开始进行统计计算
+      minimumNumberOfCalls: 2
+      #进入halfOpen状态时，可以被调用次数，就算这些请求的失败率，低于设置的失败率变为close状态，否则变为open。
+      permittedNumberOfCallsInHalfOpenState: 2
+      #允许断路器自动由打开状态转换为半开状态
+      #是否自动进入halfOpen状态，默认false-一定时间后进入halfOpen，ture-需要通过接口执行。
+      automaticTransitionFromOpenToHalfOpenEnabled: false
+      #断路器打开状态转换为半开状态需要等待的时间
+      waitDurationInOpenState: 30s
+      #在单位时间窗口内调用失败率达到50%后会启动断路器
+      failureRateThreshold: 50
+      #消费数据处理的缓存数据量大小
+      eventConsumerBufferSize: 20
+      #哪些异常都当作失败来处理(会被fallback)
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+        - java.lang.IllegalArgumentException
+      #哪些异常直接忽略(不会被fallback)
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+  #熔断备用实例
+  instances:
+    backendA:
+      #使用默认配置
+      baseConfig: default
+#配置熔断的超时设置
+resilience4j.timelimiter:
+  configs:
+    #默认的慢请求的超时设置策略
+    default:
+      #请求的超时时间
+      timeoutDuration: 3s
+      #中断异步调用
+      cancelRunningFuture: true
+

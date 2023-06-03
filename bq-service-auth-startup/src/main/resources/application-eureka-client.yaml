@@ -1,0 +1,22 @@
+eureka:
+  instance:
+    #显示当前模块的名称
+    instance-id: ${spring.application.name}
+    #true：显示当前模块的ip地址
+    prefer-ip-address: true
+    #心跳检测与续约时间
+    #开发时没置小些，保证服务关闭后注册中心能即使剔除服务
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒(默认是30秒)
+    lease-renewal-interval-in-seconds: 60
+    health-check-url-path: ${spring.application.name}/monitor/health
+    status-page-url-path: ${spring.application.name}/monitor/info
+  client:
+    #服务注册
+    register-with-eureka: true
+    #服务发现
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:9990/eureka/
+      #,http://localhost:8880/eureka/,http://localhost:7770/eureka/
+
+

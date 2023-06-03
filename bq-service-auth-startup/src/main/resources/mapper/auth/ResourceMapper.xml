@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biuqu.boot.dao.auth.UrlResourceDao">
+    <insert id="add" parameterType="UrlResource">
+        INSERT INTO sys_access_resources(id, app_id, url_id, status)
+        VALUES (#{model.id}, #{model.appId}, #{model.urlId}, #{model.status})
+    </insert>
+
+    <!--查询可用的client url信息-->
+    <select id="getBatch" resultType="UrlResource">
+        SELECT id,
+               app_id,
+               url_id
+        FROM sys_access_resources
+        WHERE app_id = #{model.appId}
+          AND status = '1'
+    </select>
+
+    <update id="update" parameterType="UrlResource">
+        UPDATE sys_access_resources
+        SET status = #{model.status}
+        WHERE app_id = #{model.appId}
+    </update>
+
+    <update id="delete" parameterType="UrlResource">
+        UPDATE sys_access_resources
+        SET status = '2'
+        WHERE app_id = #{model.appId}
+    </update>
+</mapper>

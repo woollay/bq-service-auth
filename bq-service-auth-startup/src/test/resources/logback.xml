@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: FATAL > ERROR > WARN > INFO > DEBUG-->
+<configuration debug="false">
+    <property name="LOG_SERVICE" value="biuqu-auth"/>
+    <property name="LOG_PATH" value="/Users/yoyo-studio/logs/${LOG_SERVICE}/${HOSTNAME}"/>
+    <!-- 日志默认输出级别 -->
+    <property name="LOG_LEVEL" value="INFO"/>
+    <!-- 日志文件默认输出格式,不带行号输出(行号显示会影响日志输出性能);%C:大写,类名;%M:方法名;%m:错误信息;%n:换行 -->
+    <property name="LOG_PATTERN"
+              value="%d{yy-MM-dd HH:mm:ss.SSS}[TxId:%X{PtxId},SpanId:%X{PspanId}][${LOG_SERVICE}][%level][%logger{20}_%M] - %msg%n"/>
+    <!-- 审计日志文件默认输出格式,不带行号输出(行号显示会影响日志输出性能);%C:大写,类名;%M:方法名;%m:错误信息;%n:换行 -->
+    <property name="AUDIT_LOG_PATTERN" value="%m%n"/>
+    <!-- 日志默认切割的最小单位 -->
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+
+    <!--access日志 -->
+    <appender name="accessAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/access.log</file>
+        <!-- 默认append=true，即可追加而非覆盖 -->
+        <append>true</append>
+        <!-- 滚动策略。具体策略由class指定。 -->
+        <!-- TimeBasedRollingPolicy是最常用的滚动策略，根据时间滚动，当达到一定时间时，自动重新开辟一个日志文件 -->
+        <!-- FixedWindowRollingPolicy根据固定窗口算法重命名文件的滚动策略 -->
+        <!-- triggeringPolicy根据当前活动文件大小来决定是否滚动的策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 由于表达式中最小单位为天，所以每天生成一个日志文件，且以此命名 -->
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/access-%d{yy-MM-dd}.log</FileNamePattern>
+            <!-- 保留归档文件的最大数量。 -->
+            <!-- 本例中由于使用了时间作为滚动策略，且fileNamePattern中最小单位为天，所以归档文件保存30天，超过30天将被删除 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <!-- prudent=true表示日志写入线程安全，会降低效率，默认为false -->
+        <prudent>false</prudent>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--控制台日志-->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--default日志 -->
+    <appender name="defaultAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/default.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/default-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!--error日志 -->
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/error-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--用户调用本服务的操作日志 -->
+    <appender name="opAuditAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/audit_operation.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/audit_operation-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>366</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--非正常用户调用本服务的操作日志 -->
+    <appender name="secAuditAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/audit_security.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/audit_security-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>366</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--正常用户调用本服务的重要内容操作日志(如:用户、权限、角色相关的页面操作) -->
+    <appender name="sysAuditAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/audit_system.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/audit_system-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>366</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--客户调用本服务的接口日志 -->
+    <appender name="clientAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/client.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/client-%d{yy-MM-dd}.log</FileNamePattern>
+            <maxHistory>366</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!--本服务调用第三方的日志 -->
+    <appender name="channelAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/channel.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/%d{yy-MM-dd}/channel-%d{yy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>366</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--默认日志-->
+    <logger name="com.biuqu" additivity="false">
+        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="defaultAppender"/>
+    </logger>
+
+    <!--全局异常日志-->
+    <logger name="com.biuqu.handler.GlobalExceptionHandler" additivity="false">
+        <appender-ref ref="errorAppender"/>
+    </logger>
+
+    <!--审计日志之操作日志(登录用户的业务操作) -->
+    <logger name="com.biuqu.log.dao.impl.OpLogDaoImpl" additivity="false">
+        <appender-ref ref="opAuditAppender"/>
+    </logger>
+    <!--审计日志之系统日志(登录等涉及用户权限变化的用户(被)操作) -->
+    <logger name="com.biuqu.log.dao.impl.SysLogDaoImpl" additivity="false">
+        <appender-ref ref="sysAuditAppender"/>
+    </logger>
+    <!--审计日志之安全日志(DDOS/爬虫等攻击行为的日志) -->
+    <logger name="com.biuqu.log.dao.impl.SecLogDaoImpl" additivity="false">
+        <appender-ref ref="secAuditAppender"/>
+    </logger>
+
+    <!--建立一个默认的root的logger -->
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="defaultAppender"/>
+    </root>
+</configuration>

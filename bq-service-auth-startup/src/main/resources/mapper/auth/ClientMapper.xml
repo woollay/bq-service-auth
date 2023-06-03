@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biuqu.boot.dao.auth.ClientResourceSecDao">
+    <insert id="add" parameterType="ClientResource">
+        INSERT INTO sys_access(id, app_id, app_key, app_name, status, create_time, expire_time, sec_key)
+        VALUES (#{model.id}, #{model.appId}, #{model.appKey}, #{model.appName}, #{model.status}, #{model.createTime},
+                #{model.expireTime}, #{model.secKey})
+    </insert>
+
+    <!--查询可用的client信息-->
+    <select id="get" resultType="ClientResource">
+        SELECT id,
+               app_id,
+               app_key,
+               app_name,
+               status,
+               create_time,
+               expire_time,
+               sec_key
+        FROM sys_access
+        WHERE app_id = #{model.appId}
+          AND status = '1'
+          AND expire_time > trunc(extract(epoch from now()) * 1000)
+    </select>
+
+    <update id="update" parameterType="ClientResource">
+        UPDATE sys_access
+        SET status = #{model.status}
+        WHERE app_id = #{model.appId}
+    </update>
+
+    <update id="delete" parameterType="ClientResource">
+        UPDATE sys_access
+        SET status = '2'
+        WHERE app_id = #{model.appId}
+    </update>
+</mapper>

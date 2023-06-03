@@ -1,0 +1,35 @@
+version: '3'
+services:
+  bq-auth-01:
+    #配置容器名
+    container_name: biuqu-auth-01
+    # 指定镜像名
+    image: biuqu/bq-auth:1.1
+    ports:
+      # 暴露端口
+      - "9991:9991"
+    volumes:
+      # 创建容器数据卷
+      - ~/docker/bq-clusters/logs/01:/opt/apps/bq-clusters/logs/
+  bq-auth-02:
+    #配置容器名
+    container_name: biuqu-auth-02
+    # 指定镜像名
+    image: biuqu/bq-auth:1.2
+    ports:
+      # 暴露端口
+      - "9981:9981"
+    volumes:
+      # 创建容器数据卷
+      - ~/docker/bq-clusters/logs/02:/opt/apps/bq-clusters/logs/
+  bq-auth-03:
+    #配置容器名
+    container_name: biuqu-auth-03
+    # 指定镜像名
+    image: biuqu/bq-auth:1.3
+    ports:
+      # 暴露端口
+      - "9971:9971"
+    volumes:
+      # 创建容器数据卷
+      - ~/docker/bq-clusters/logs/03:/opt/apps/bq-clusters/logs/

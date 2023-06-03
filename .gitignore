@@ -1,0 +1,16 @@
+/.idea/
+*.iml
+/target/
+/*/target/
+/*/**/target/
+/*/*/target/
+/*/*/*/target/
+*.iml
+*/**.iml
+*/*/*.iml
+*/*/*/*.iml
+
+*.iml
+*.log
+*.tar
+

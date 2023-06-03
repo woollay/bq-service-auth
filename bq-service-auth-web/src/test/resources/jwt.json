@@ -1,0 +1,24 @@
+{
+  "claims": {
+    "sub": "admin",
+    "aud": [
+      "admin"
+    ],
+    "nbf": 1676184758000,
+    "scope": [
+      "scope"
+    ],
+    "iss": "http://localhost:8881",
+    "source_type": "SDK",
+    "exp": 1676186558000,
+    "iat": 1676184758000
+  },
+  "expirationTime": 1676186558000,
+  "audience": [
+    "admin"
+  ],
+  "notBeforeTime": 1676184758000,
+  "issueTime": 1676184758000,
+  "issuer": "http://localhost:8881",
+  "subject": "admin"
+}

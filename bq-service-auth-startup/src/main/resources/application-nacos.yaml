@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    sentinel:
+      transport:
+        #sentinel服务地址
+        dashboard: localhost:8080
+        #默认8719，假如被占用了会自动从8719开始依次+1扫描。直至找到未被占用的端口
+        port: 8719
+      #规则持久化配置
+      datasource:
+        ds1:
+          nacos:
+            #nacos服务地址
+            server-addr: localhost:8848
+            #nacos配置文件的名称
+            dataId: ${spring.application.name}
+            groupId: DEFAULT_GROUP
+            #持久化为json文件
+            data_type: json
+            rule_type: flow
+    nacos:
+      data-id: bq-gateway-route-id
+      timeout: 3000
+      server-addr: localhost:8848
+      username: nacos
+      password: nacos
+      namespace: dev
+      config:
+        group: DEFAULT_GROUP
+        import-check:
+          enabled: false
+      discovery:
+        group: DEFAULT_GROUP
+        #因为docker容器模式添加
+        ip: localhost

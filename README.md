@@ -22,9 +22,7 @@
 
 - `SpringSecurity-OAuth2-Authorization-Server`本身虽然支持了多种场景的OAuth2认证，但是很难适用于已经存在账密体系的系统迁移改造，好的auth服务必须能够支持账密体系的扩展；
 - `bq-service-auth`完全是通过`SpringSecurity-OAuth2-Authorization-Server`框架的扩展点来实现的（没有用到任何反射），但是也基本上把框架改了个底朝天，好在不辱使命，终于进一步加深了我对对框架的认知；
-- 因为`SpringSecurity-OAuth2-Authorization-Server`和jdk版本的关系，由于想兼容更多的JDK版本，所以JDK版本为1.8，对应的框架最多只能选择`0.2.
-3`，从而导致`bq-service-auth`使用的SpringBoot版本和SpringCloud版本全部降了版本(SpringBoot:`2.7.4`->`2.5.12`，SpringCloud:`2021.0.5`->`3.0.6`，AlibabaSpringCloud:`2021.0.5.
-0`->`2021.0.1.0`,…)，如果你也遇到了版本兼容的问题，你就知道这个过程是多么的痛苦；
+- 因为`SpringSecurity-OAuth2-Authorization-Server`和jdk版本的关系，由于想兼容更多的JDK版本，所以JDK版本为1.8，对应的框架最多只能选择`0.2.3`，从而导致`bq-service-auth`使用的SpringBoot版本和SpringCloud版本全部降了版本(SpringBoot:`2.7.4`->`2.5.12`，SpringCloud:`2021.0.5`->`3.0.6`，AlibabaSpringCloud:`2021.0.5.0`->`2021.0.1.0`,…)，如果你也遇到了版本兼容的问题，你就知道这个过程是多么的痛苦；
 - 整合了sleuth/zipkin，并同时整合了logback，服务做到了Access Log和运行日志均具有链路追踪ID；
 - 整合了`CircuitBreaker`/Sentinel服务降级、`Nacos`/`Eureka`服务注册中心，使之具有完备的服务能力；
 

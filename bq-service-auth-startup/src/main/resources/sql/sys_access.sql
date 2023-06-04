@@ -28,5 +28,5 @@ comment
 comment
     on column sys_access.create_time is '应用创建时间';
 
-insert into sys_access
-values ('d001', 'bq-app', 'app001', 'pwd001', '1', 1566382443412, 1566382443412, null);
+-- insert into sys_access
+-- values ('d001', 'bq-app', 'app001', 'pwd001', '1', 1566382443412, 1566382443412, null);

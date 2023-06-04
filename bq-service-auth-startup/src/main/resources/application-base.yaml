@@ -1,0 +1,83 @@
+server:
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 2000
+    max-threads: 2000
+    basedir: ${logging.basedir}
+    #使用自定义的access log实现
+    accesslog:
+      enabled: true
+      buffered: true
+      pattern: '%{yy-MM-dd HH:mm:ss.SSS}t|%{traceId}M|%{spanId}M|%a|%h|%H|%r|%s|%bB|%Dms|%{X-Request-ID}i|forward:%{X-Forwarded-For}i|refer:%{Referer}i|%{User-Agent}i'
+spring:
+  mvc:
+    log-request-details: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    initialSize: 5
+    maxActive: 20
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 60000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 5
+    #回收的超时时间(单位:s)
+    removeAbandonedTimeout: 180
+    #回收时打印连接的异常信息
+    logAbandoned: true
+    testOnBorrow: false
+    testOnReturn: false
+    testWhileIdle: true
+    #连接在连接池中的最小生存时间
+    minEvictableIdleTimeMills: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:postgresql://localhost:5432/postgres?&schema=public&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: postgres
+    password: postgres
+    #password: postgres
+    validationQuery: SELECT 'test' as txt
+mybatis:
+  config-location: classpath:conf/mybatis.xml
+  mapper-locations: classpath*:mapper/*/*.xml
+  type-aliases-package: com.biuqu.model,com.biuqu.boot.model,com.biuqu.boot.*.model,com.biuqu.boot.*.*.model
+bq:
+  http:
+    rest:
+      id: defaultRest
+      #连接超时时间
+      connTimeout: 1000
+      #请求超时时间
+      timeout: 3000
+      #关闭socket之后延迟关闭http通道的时间(ms)
+      soLinger: 1000
+      maxConn: 1000
+    clients:
+      - id: defaultHttp
+        connTimeout: 1000
+        timeout: 3000
+      - id: initHttp
+        connTimeout: 1000
+        timeout: 2000
+        maxConn: 2
+  web:
+    invalid-urls: /nacos**,/f5monweb**
+  limit:
+    #限流默认不打开,只有业务服务才需要打开(gateway/oauth/eureka等公共服务不需要)
+    enabeld: false
+    #qps默认限流值
+    qps: 100
+    #qps默认限流粒度(秒,单位ms)
+    qpsUnit: 1000
+    #最大调用量默认的限流值
+    max: 10000
+    #qps默认限流粒度(秒,单位ms)
+    maxUnit: 86400000
+
+
+
+
+
+

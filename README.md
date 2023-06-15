@@ -7,7 +7,7 @@
         <version>1.0.3</version>
     </dependency>
 	```
- 中的[`README`文档](https://github.com/woollay/bq-parent/raw/main/README.MD) 
+ 中的[`README`文档](https://github.com/woollay/bq-parent/blob/main/README.MD) 
 - 本服务基于SpringSecurity-OAuth2-Authorization-Server二次封装，主要是为了简化JwtToken的生成和鉴权，当然也支持灵活的配置扩展：
 - 本服务具备完整的独立服务能力，核心依赖：
     ```xml

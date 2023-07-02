@@ -7,6 +7,7 @@ import com.biuqu.model.StatusType;
 import com.biuqu.utils.IdUtil;
 import com.biuqu.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +46,16 @@ public class ClientResourceController
     @PostMapping("/auth/user/get")
     public ResultCode<ClientResource> get(@RequestBody ClientResource client)
     {
-        log.info("current user:{}", JsonUtil.toJson(client));
+        long simulatorMills = RandomUtils.nextInt(8, 15) * 100;
+        log.info("current user:{},with simulator:{}ms", JsonUtil.toJson(client), simulatorMills);
+        //        try
+        //        {
+        //            Thread.sleep(simulatorMills);
+        //        }
+        //        catch (InterruptedException e)
+        //        {
+        //            log.error("InterruptedException:", e);
+        //        }
         ClientResource result = dao.get(client);
         log.info("from db user:{}", JsonUtil.toJson(result));
         return ResultCode.ok(result);
